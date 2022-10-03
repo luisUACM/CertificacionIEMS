@@ -1,5 +1,7 @@
 package com.consultoriaBuzo.CertificacionIEMS.modelo;
 
+import java.util.EnumSet;
+
 /**
  *
  * @author Luis Alberto
@@ -47,5 +49,21 @@ public enum Academia {
     @Override
     public String toString(){
         return name;
+    }
+    
+    /**Regresa la constante de tipo Academia que corresponda con la cadena pasada
+     * por parámetro, como si fuera una conversión String a Academia
+     * @return la Academia correspondiente a la cadena pasada por parrámetro,
+     * null si no hay conincidencia
+     * @param str el nombre de la academia
+     */
+    public static Academia getAcademia(String str){
+            
+        for (Academia element : EnumSet.allOf(Academia.class)) {
+            if (element.toString().equals(str)) {
+                return element;
+            }
+        }
+        return null;
     }
 }

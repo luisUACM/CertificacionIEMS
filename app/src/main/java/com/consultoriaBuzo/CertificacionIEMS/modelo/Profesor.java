@@ -10,6 +10,7 @@ public class Profesor {
     private Academia academia;
     private char turno;
     private boolean activo;
+    private int id;
 
     /**
      * Regresa el nombre del profesor
@@ -84,28 +85,40 @@ public class Profesor {
         this.activo = activo;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Crea un profesor vacío con los siguientes valores para los atributos:
      * nombre = ""
      * academia = Academia.NO_VALIDO
      * turno = ' '
      * activo = false
+     * id = -1;
      */
     public Profesor() {
         nombre = "";
         academia = Academia.NO_VALIDO;
         turno = ' ';
         activo = false;
+        id = -1;
     }
 
     /**
      * Constructor para asesor, establece los atributos con los valores pasados
      * por parámetro
+     * @param id la id_asesor del profesor de la base de datos
      * @param nombre el nombre del profesor
      * @param academia la academia y materia que imparte el profesor
      * @param activo el estado de activo del profesor
      */
-    public Profesor(String nombre, Academia academia, boolean activo) {
+    public Profesor(int id, String nombre, Academia academia, boolean activo) {
+        this.id = id;
         this.nombre = nombre;
         this.academia = academia;
         this.activo = activo;
@@ -113,12 +126,15 @@ public class Profesor {
     /**
      * Constructor para DTI, establece los atributos con los valores pasados
      * por parámetro
+     * @param id la id_dti del profesor de la base de datos
      * @param nombre el nombre del profesor
      * @param academia la academia y materia que imparte el profesor
      * @param turno el turno del profesor
      * @param activo el estado de activo del profesor
      */
-    public Profesor(String nombre, Academia academia, char turno, boolean activo) {
+    public Profesor(int id, String nombre, Academia academia, char turno,
+            boolean activo) {
+        this.id = id;
         this.nombre = nombre;
         this.academia = academia;
         this.turno = turno;
@@ -131,6 +147,6 @@ public class Profesor {
      */
     @Override
     public String toString() {
-        return "" + nombre + academia + ", turno " + turno + ", activo =" + activo;
+        return "ID: " + id + "- " + nombre + " "+ academia + ", turno " + turno + ", activo = " + activo;
     }
 }

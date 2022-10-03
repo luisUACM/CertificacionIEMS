@@ -16,26 +16,26 @@ import java.util.logging.Logger;
  *
  * @author Luis Alberto
  */
-public class DTIDAOImplementacion implements DTIDAO{
-    private final ConexionOracle conexion;
+public class AsesorDAOImplementacion implements AsesorDAO{
 
+    private final ConexionOracle conexion;
+    
     /** 
      * Crea un nuevo objeto de la clase ConexionOracle para usarse al conectar
      * en el resto de métodos
      */
-    public DTIDAOImplementacion() {
+    public AsesorDAOImplementacion() {
         conexion = new ConexionOracle();
     }
     
     @Override
-    public boolean addDTI(Profesor dti) {
+    public boolean addAsesor(Profesor asesor) {
         boolean exito = false;
         Statement stm = null;
         Connection con = null;
-        String sql = "INSERT INTO dti (nombre_completo, academia, turno) "
-                + "VALUES ('" + dti.getNombre() + "', '"
-                + dti.getAcademia() + "', '"
-                + dti.getTurno() + "')";
+        String sql = "INSERT INTO asesor (nombre_completo, academia) "
+                + "VALUES ('" + asesor.getNombre() + "', '"
+                + asesor.getAcademia() + "')";
         
         try {
             con = conexion.getConexionOracle();
@@ -44,14 +44,14 @@ public class DTIDAOImplementacion implements DTIDAO{
             exito = true;
                 
         }catch (SQLException ex){
-            System.out.println("Error en clase DTIDAOImplementacion método "
-                    + "addDTI.");
+            System.out.println("Error en clase AsesorDAOImplementacion método "
+                    + "addAsesor.");
         }finally{
             if (con != null){
                 try {
                     con.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -60,7 +60,7 @@ public class DTIDAOImplementacion implements DTIDAO{
                 try {
                     stm.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -70,23 +70,22 @@ public class DTIDAOImplementacion implements DTIDAO{
     }
 
     @Override
-    public boolean updateDTI(Profesor dti) {
+    public boolean updateAsesor(Profesor asesor) {
         boolean exito = false;
         Statement stm = null;
         Connection con = null;
-        String sql = "UPDATE dti SET nombre_completo = '" + dti.getNombre() 
-                + "', " + "academia = '" + dti.getAcademia() + "', "
-                + "turno = '" + dti.getTurno() + "', "
-                + "estado_activo = ";
+        String sql = "UPDATE asesor SET nombre_completo = '" + asesor.getNombre() 
+                + "', " + "academia = '" + asesor.getAcademia() 
+                + "', " + "estado_activo = '";
         char activo;
         
-        if (dti.getActivo()){
+        if (asesor.getActivo()){
             activo = 'Y';
         }else{
             activo = 'N';
         }
         
-        sql = sql + "'" + activo + "' WHERE id_dti = '" + dti.getId() + "'";
+        sql+= "" + activo + "' WHERE id_asesor = '" + asesor.getId() + "'";
         
         try {
             con = conexion.getConexionOracle();
@@ -95,14 +94,14 @@ public class DTIDAOImplementacion implements DTIDAO{
             exito = true;
                 
         }catch (SQLException ex){
-            System.out.println("Error en clase DTIDAOImplementacion método "
-                    + "updateDTI.");
+            System.out.println("Error en clase AsesorDAOImplementacion método "
+                    + "updateAsesor.");
         }finally{
             if (con != null){
                 try {
                     con.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -111,7 +110,7 @@ public class DTIDAOImplementacion implements DTIDAO{
                 try {
                     stm.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -121,11 +120,11 @@ public class DTIDAOImplementacion implements DTIDAO{
     }
 
     @Override
-    public Profesor getDTI(String nombre) {
+    public Profesor getAsesor(String nombre) {
         Profesor profesor = null;
         PreparedStatement querry = null;
         ResultSet set = null;
-        String sql = "SELECT * FROM dti WHERE nombre_completo = '" 
+        String sql = "SELECT * FROM asesor WHERE nombre_completo = '" 
                 + nombre + "'";
         
         try{
@@ -133,23 +132,22 @@ public class DTIDAOImplementacion implements DTIDAO{
             querry = conexion.getConexionOracle().prepareStatement(sql);
             set = querry.executeQuery();
             if (set.next()){
-                profesor.setId(Integer.parseInt(set.getString("id_dti")));
+                profesor.setId(Integer.parseInt(set.getString("id_asesor")));
                 profesor.setNombre(set.getString("nombre_completo"));
                 profesor.setAcademia(Academia.getAcademia(set
                         .getString("academia")));
-                profesor.setTurno(set.getString("turno").charAt(0));
                 profesor.setActivo(set.getBoolean("estado_activo"));
             }
             
         } catch (SQLException ex) {
-            System.out.println("Error en la clase DTIDAOImplementacion método"
-                    + " getDTI(String).");
+            System.out.println("Error en la clase AsesorDAOImplementacion método "
+                    + "getAsesor(String).");
         }finally{
             if (set != null){
                 try {
                     set.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -158,7 +156,7 @@ public class DTIDAOImplementacion implements DTIDAO{
                 try {
                     querry.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -167,28 +165,24 @@ public class DTIDAOImplementacion implements DTIDAO{
     }
 
     @Override
-    public List<Profesor> getDTI(Academia academia) {
+    public List<Profesor> getAsesor(Academia academia) {
         Profesor profesor = null;
         List lista = null;
         PreparedStatement querry = null;
         ResultSet set = null;
-        Connection con = null;
-        String sql = "SELECT * FROM dti WHERE academia = '" 
-                + academia + "' AND estado_activo = 'Y'";
+        String sql = "SELECT * FROM asesor WHERE academia = '" 
+                + academia.toString() + "' AND estado_activo = 'Y'";
         
         try{
             profesor = new Profesor();
             lista = new ArrayList<>();
-            con = conexion.getConexionOracle();
-            querry = con.prepareStatement(sql);
+            querry = conexion.getConexionOracle().prepareStatement(sql);
             set = querry.executeQuery();
-            set.getMetaData();
             while (set.next()){
-                profesor.setId(Integer.parseInt(set.getString("id_dti")));
+                profesor.setId(Integer.parseInt(set.getString("id_asesor")));
                 profesor.setNombre(set.getString("nombre_completo"));
                 profesor.setAcademia(Academia.getAcademia(set
                         .getString("academia")));
-                profesor.setTurno(set.getString("turno").charAt(0));
                 profesor.setActivo(set.getBoolean("estado_activo"));
                 
                 lista.add(profesor);
@@ -196,14 +190,14 @@ public class DTIDAOImplementacion implements DTIDAO{
             }
             
         } catch (SQLException ex) {
-            System.out.println("Error en la clase DTIDAOImplementacion método "
-                    + "getDTI(Academia).");
+            System.out.println("Error en la clase AsesorDAOImplementacion método "
+                    + "getAsesor(Asesor).");
         }finally{
-            if (con != null){
+            if (set != null){
                 try {
-                    con.close();
+                    set.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -212,7 +206,7 @@ public class DTIDAOImplementacion implements DTIDAO{
                 try {
                     querry.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -226,22 +220,18 @@ public class DTIDAOImplementacion implements DTIDAO{
         List lista = null;
         PreparedStatement querry = null;
         ResultSet set = null;
-        Connection con = null;
-        String sql = "SELECT * FROM dti";
+        String sql = "SELECT * FROM asesor";
         
         try{
             profesor = new Profesor();
             lista = new ArrayList<>();
-            con = conexion.getConexionOracle();
-            querry = con.prepareStatement(sql);
+            querry = conexion.getConexionOracle().prepareStatement(sql);
             set = querry.executeQuery();
-            set.getMetaData();
             while (set.next()){
-                profesor.setId(Integer.parseInt(set.getString("id_dti")));
+                profesor.setId(Integer.parseInt(set.getString("id_asesor")));
                 profesor.setNombre(set.getString("nombre_completo"));
                 profesor.setAcademia(Academia.getAcademia(set
                         .getString("academia")));
-                profesor.setTurno(set.getString("turno").charAt(0));
                 profesor.setActivo(set.getBoolean("estado_activo"));
                 
                 lista.add(profesor);
@@ -249,14 +239,14 @@ public class DTIDAOImplementacion implements DTIDAO{
             }
             
         } catch (SQLException ex) {
-            System.out.println("Error en la clase DTIDAOImplementacion método "
-                    + "getAll.");
+            System.out.println("Error en la clase AsesorDAOImplementacion método "
+                    + "getAsesor(Asesor).");
         }finally{
-            if (con != null){
+            if (set != null){
                 try {
-                    con.close();
+                    set.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
@@ -265,11 +255,12 @@ public class DTIDAOImplementacion implements DTIDAO{
                 try {
                     querry.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(DTIDAOImplementacion.class.getName())
+                    Logger.getLogger(AsesorDAOImplementacion.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
             }
         }
         return lista;
     }
+    
 }

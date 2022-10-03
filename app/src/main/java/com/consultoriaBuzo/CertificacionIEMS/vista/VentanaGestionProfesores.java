@@ -1,8 +1,9 @@
-package com.consultoriaBuzo.certificacionIEMS.vista;
+package com.consultoriaBuzo.CertificacionIEMS.vista;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 /**
@@ -37,7 +38,7 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         comboBoxTurno = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaProfesores = new javax.swing.JTable();
         botonRegistrar = new javax.swing.JButton();
         radioBotonAsesor = new javax.swing.JRadioButton();
         radioBotonDTI = new javax.swing.JRadioButton();
@@ -48,17 +49,6 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         textoNombre.setToolTipText("");
-        textoNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textoNombreActionPerformed(evt);
-            }
-        });
-
-        comboBoxAcademia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxAcademiaActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Nombre:");
 
@@ -68,56 +58,43 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
 
         comboBoxTurno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Matutino", "Vespertino" }));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Nombre", "Academia", "Turno", "Activo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTable1.setShowGrid(true);
-        jScrollPane1.setViewportView(jTable1);
+        tablaProfesores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tablaProfesores.setShowGrid(true);
+        jScrollPane1.setViewportView(tablaProfesores);
+        if (tablaProfesores.getColumnModel().getColumnCount() > 0) {
+            tablaProfesores.getColumnModel().getColumn(0).setMinWidth(100);
+            tablaProfesores.getColumnModel().getColumn(0).setPreferredWidth(150);
+            tablaProfesores.getColumnModel().getColumn(1).setMinWidth(100);
+            tablaProfesores.getColumnModel().getColumn(1).setPreferredWidth(150);
+            tablaProfesores.getColumnModel().getColumn(2).setMinWidth(20);
+            tablaProfesores.getColumnModel().getColumn(2).setPreferredWidth(20);
+            tablaProfesores.getColumnModel().getColumn(3).setMinWidth(20);
+            tablaProfesores.getColumnModel().getColumn(3).setPreferredWidth(20);
+        }
 
         botonRegistrar.setText("Regsitrar");
-        botonRegistrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonRegistrarActionPerformed(evt);
-            }
-        });
 
         radioBotonAsesor.setText("Asesor");
-        radioBotonAsesor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioBotonAsesorActionPerformed(evt);
-            }
-        });
 
         radioBotonDTI.setText("DTI");
-        radioBotonDTI.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioBotonDTIActionPerformed(evt);
-            }
-        });
 
         botonGuardar.setText("Guardar cambios");
-        botonGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonGuardarActionPerformed(evt);
-            }
-        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/IEMSLogo.png"))); // NOI18N
 
@@ -196,30 +173,6 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void textoNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textoNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textoNombreActionPerformed
-
-    private void comboBoxAcademiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxAcademiaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxAcademiaActionPerformed
-
-    private void botonRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonRegistrarActionPerformed
-
-    private void radioBotonDTIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBotonDTIActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioBotonDTIActionPerformed
-
-    private void radioBotonAsesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBotonAsesorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioBotonAsesorActionPerformed
-
-    private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_botonGuardarActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGuardar;
     private javax.swing.JButton botonRegistrar;
@@ -231,9 +184,9 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JRadioButton radioBotonAsesor;
     private javax.swing.JRadioButton radioBotonDTI;
+    private javax.swing.JTable tablaProfesores;
     private javax.swing.JTextField textoNombre;
     // End of variables declaration//GEN-END:variables
 
@@ -298,5 +251,12 @@ public class VentanaGestionProfesores extends javax.swing.JFrame {
         return textoNombre;
     }
 
-    
+    /**
+     * Regresa el objeto JTable correspondiente a la tabla en la que se muestran
+     * los profesores
+     * @return la JTablee de la vista
+     */
+    public JTable getTablaProfesores() {
+        return tablaProfesores;
+    }
 }
