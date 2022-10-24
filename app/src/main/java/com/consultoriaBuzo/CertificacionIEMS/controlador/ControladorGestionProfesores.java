@@ -6,6 +6,7 @@ import com.consultoriaBuzo.CertificacionIEMS.dao.DTIDAO;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Academia;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Profesor;
 import com.consultoriaBuzo.CertificacionIEMS.dao.DTIDAOImplementacion;
+import com.consultoriaBuzo.CertificacionIEMS.persistencia.MensajeModal;
 import com.consultoriaBuzo.CertificacionIEMS.vista.VentanaGestionProfesores;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -16,9 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.event.AncestorListener;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -148,39 +148,49 @@ public class ControladorGestionProfesores {
      * en la tabla correspondiente
      */
     private void registrarProfesor(){
-        System.out.println("Método para registrar");
         Profesor prof = new Profesor();
         Academia academia = Academia.values()
                 [vista.getComboBoxAcademia().getSelectedIndex()];
         String nombre = vista.getTextoNombre().getText();
         char c = vista.getComboBoxTurno().getSelectedItem().toString().charAt(0);
+        MensajeModal mensaje = new MensajeModal(vista);
         
         if (nombre.compareTo("") != 0){
             prof.setNombre(nombre);
         }else{
-            System.out.println("Error: sin nombre");
+            mensaje.mostrarMensaje("ERROR", "Profesor sin nombre");
             return;
         }
         
         if (academia != Academia.NO_VALIDO){
             prof.setAcademia(academia);
         }else{
-            System.out.println("Error: sin academmia");
+            mensaje.mostrarMensaje("ERROR", "Profesor sin academia");
             return;
         }
         
         prof.setTurno(c);
         
         if (vista.getRadioBotonDTI().isSelected()){
-            DTIDAO dao = new DTIDAOImplementacion();
-            dao.addDTI(prof);
+            if(c == ' '){
+                mensaje.mostrarMensaje("ERROR", "DTI sin turno");
+                return;
+            }else{
+                DTIDAO dao = new DTIDAOImplementacion();
+                dao.addDTI(prof);
+                mensaje.mostrarMensaje("Éxito", "DTI registrado con éxito");
+            }
+            
         }else if (vista.getRadioBotonAsesor().isSelected()){
             AsesorDAO dao = new AsesorDAOImplementacion();
             dao.addAsesor(prof);
+            mensaje.mostrarMensaje("Éxito", "Asesor registrado con éxito");
         }else{
-            System.out.println("Error: sin tipo de profesor");
+            mensaje.mostrarMensaje("ERROR", "Sin tipo de profesor");
+            return;
         }
-        
+        clearVista();
+        actualizarTabla(prof);
     }
     
     /**
@@ -218,11 +228,11 @@ public class ControladorGestionProfesores {
     /**
      * Inicializa la JTable de la vista con los valores de la base de datos
      */
-    public void initTabla(){
+    private void initTabla(){
         JTable tabla = vista.getTablaProfesores();
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        List<Profesor> listaCompleta = new ArrayList<>();
-        List<Profesor> lista2 = new ArrayList<>();
+        List<Profesor> listaCompleta;
+        List<Profesor> lista2;
         DTIDAO daoDti = new DTIDAOImplementacion();
         AsesorDAO daoAsesor = new AsesorDAOImplementacion();
         Object datos[];
@@ -262,7 +272,7 @@ public class ControladorGestionProfesores {
      * Accion que ocurre cuando se selecciona una celda dentro de la tabla. 
      * Agrega los valores sin modificar a listaProfesoresSeleccionados
      */
-    public void seleccionarProfesor(){
+    private void seleccionarProfesor(){
         JTable tabla = vista.getTablaProfesores();
         int fila = tabla.getSelectedRow();
         String nombre = (String) tabla.getValueAt(fila, 0);
@@ -287,5 +297,70 @@ public class ControladorGestionProfesores {
             listaProfesoresSeleccionados.add(profesor);
             listaFilasModificadas.add(fila);
         }
+    }
+    
+    /**
+     * Limpia los botones de la vista, estableciendo sus campos como si fueran  
+     * inicializados por primera vez
+     */
+    private void clearVista(){
+        JTextField textF = vista.getTextoNombre();
+        JComboBox comboBox = vista.getComboBoxAcademia();
+        JRadioButton rBoton = vista.getRadioBotonAsesor();
+        
+        textF.setText("");
+        comboBox.setSelectedIndex(0);
+        comboBox = vista.getComboBoxTurno();
+        comboBox.setSelectedIndex(0);
+        rBoton.setSelected(false);
+        rBoton = vista.getRadioBotonDTI();
+        rBoton.setSelected(false);
+        comboBox = vista.getComboBoxTurno();
+        comboBox.setEnabled(true);
+    }
+    
+    /**
+     * Agrega el nuevo profesor registrado en la base de datos, a la tabla en
+     * la vista (en su lugar correspondiente al orden alfabético)
+     */
+    private void actualizarTabla(Profesor prof){
+        JTable tabla = vista.getTablaProfesores();
+        Object datos[];
+        int columnas = 4;
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        int i;
+        String nombre;
+        int filas = modelo.getRowCount();
+        int iniAsesores = filas;
+        
+        datos = new Object[columnas];
+        datos[0] = prof.getNombre();
+        datos[1]= prof.getAcademia();
+        datos[2]= prof.getTurno();
+        datos[3]= prof.getActivo();
+        
+        for (i = 0; i < filas; i++){
+            if ((char)modelo.getValueAt(i,2) == ' '){
+                iniAsesores = i;
+                break;
+            }
+        }
+        
+        if (prof.getTurno() == ' '){
+            for (i = iniAsesores; i < filas; i++){
+                nombre = (String)modelo.getValueAt(i,0);
+                if(nombre.compareTo(prof.getNombre()) > 0){
+                    break;
+                }
+            }
+        }else{
+            for (i = 0; i < iniAsesores; i++){
+                nombre = (String)modelo.getValueAt(i,0);
+                if(nombre.compareTo(prof.getNombre()) > 0){
+                    break;
+                }
+            }
+        }
+        modelo.insertRow(i,datos);
     }
 }

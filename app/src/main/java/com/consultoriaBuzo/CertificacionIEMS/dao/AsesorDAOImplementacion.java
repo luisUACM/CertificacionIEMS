@@ -1,5 +1,6 @@
 package com.consultoriaBuzo.CertificacionIEMS.dao;
 
+import com.consultoriaBuzo.CertificacionIEMS.persistencia.ConexionOracle;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Academia;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Profesor;
 import java.sql.Connection;
@@ -166,7 +167,7 @@ public class AsesorDAOImplementacion implements AsesorDAO{
 
     @Override
     public List<Profesor> getAsesor(Academia academia) {
-        Profesor profesor = null;
+        Profesor profesor;
         List lista = null;
         PreparedStatement querry = null;
         ResultSet set = null;
@@ -216,11 +217,11 @@ public class AsesorDAOImplementacion implements AsesorDAO{
 
     @Override
     public List<Profesor> getAll() {
-        Profesor profesor = null;
+        Profesor profesor;
         List lista = null;
         PreparedStatement querry = null;
         ResultSet set = null;
-        String sql = "SELECT * FROM asesor";
+        String sql = "SELECT * FROM asesor ORDER BY nombre_completo ASC";
         
         try{
             profesor = new Profesor();

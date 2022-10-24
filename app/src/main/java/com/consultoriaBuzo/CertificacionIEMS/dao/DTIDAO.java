@@ -2,7 +2,6 @@ package com.consultoriaBuzo.CertificacionIEMS.dao;
 
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Academia;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Profesor;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -20,7 +19,6 @@ public interface DTIDAO {
     /**
      * Actualiza la información del DTI en la base de datos
      * @param dti un objeto Profesor que contiene los nuevos datos del DTI
-     * @param id la id del registro del DTI que se quiere actualizar
      * @return true si todo salió bien, false si hubo un error
      */
     public boolean updateDTI(Profesor dti);

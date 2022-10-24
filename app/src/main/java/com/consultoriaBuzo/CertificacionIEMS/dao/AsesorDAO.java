@@ -41,7 +41,6 @@ public interface AsesorDAO {
     /**
      * Busca a todos los asesores en la base de datos,devuelve 
      * una lista con todos los registros con el atributo estado_activo = true
-     * @param academia la academia de la que se quieren buscar los asesores
      * @return una lista con todos los registros de los asesores
      */
     public List<Profesor>getAll();

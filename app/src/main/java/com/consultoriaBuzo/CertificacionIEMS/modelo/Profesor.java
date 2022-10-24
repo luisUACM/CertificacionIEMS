@@ -57,15 +57,18 @@ public class Profesor {
 
     /**
     * Establece el atributo de turno del profesor, no se debería usar para asesores
-    * @param turno la academia a establecer. Los únicos caracteres válidos son:
+    * Los únicos caracteres válidos son:
     * 'M' para matutino
     * 'V' para vespertino
-    * ' ' para asesores. 
-    * Cualquier otro no será tomado en cuenta
+    * ' ' para asesores.
+    * 'm' y 'v' son transformados a mayúsculas.
+    * @param turno la academia a establecer.
     */
     public void setTurno(char turno) {
         if (turno == ' ' || turno == 'M' || turno == 'V'){
             this.turno = turno;
+        }else if (turno == 'm' || turno == 'b'){
+            this.turno = Character.toUpperCase(turno);
         }
     }
 
@@ -85,10 +88,18 @@ public class Profesor {
         this.activo = activo;
     }
 
+    /**
+     * Obtiene el id de la base de datos del profesor
+     * @return la id del profesor
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Establece la id del profesor
+     * @param id la id a establecer
+     */
     public void setId(int id) {
         this.id = id;
     }

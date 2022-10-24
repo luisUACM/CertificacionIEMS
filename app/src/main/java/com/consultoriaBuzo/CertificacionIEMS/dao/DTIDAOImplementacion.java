@@ -1,5 +1,6 @@
 package com.consultoriaBuzo.CertificacionIEMS.dao;
 
+import com.consultoriaBuzo.CertificacionIEMS.persistencia.ConexionOracle;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Academia;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Profesor;
 import java.sql.Connection;
@@ -168,10 +169,10 @@ public class DTIDAOImplementacion implements DTIDAO{
 
     @Override
     public List<Profesor> getDTI(Academia academia) {
-        Profesor profesor = null;
+        Profesor profesor;
         List lista = null;
         PreparedStatement querry = null;
-        ResultSet set = null;
+        ResultSet set;
         Connection con = null;
         String sql = "SELECT * FROM dti WHERE academia = '" 
                 + academia + "' AND estado_activo = 'Y'";
@@ -222,12 +223,12 @@ public class DTIDAOImplementacion implements DTIDAO{
 
     @Override
     public List<Profesor> getAll() {
-        Profesor profesor = null;
+        Profesor profesor;
         List lista = null;
         PreparedStatement querry = null;
-        ResultSet set = null;
+        ResultSet set;
         Connection con = null;
-        String sql = "SELECT * FROM dti";
+        String sql = "SELECT * FROM dti ORDER BY nombre_completo ASC";
         
         try{
             profesor = new Profesor();

@@ -1,4 +1,4 @@
-package com.consultoriaBuzo.CertificacionIEMS.dao;
+package com.consultoriaBuzo.CertificacionIEMS.persistencia;
 
 import java.sql.SQLException;
 import java.sql.Connection;
