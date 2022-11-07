@@ -112,7 +112,7 @@ public class Estudiante {
 
     /**
      * Obtiene la modalidad del estudiante
-     * @return 'E' para escolar o 'S' para semiescolar
+     * @return 'E' para escolar, 'S' para semiescolar o 'I' para independiente
      */
     public char getModalidad() {
         return modalidad;
@@ -121,13 +121,14 @@ public class Estudiante {
     /**
      * Establece la modalidad.Los únicos valores vállidos son:
      * 'E' o 'e' para escolar 
-     * 'S' o 's' para semiescolar
+     * 'S' o 's' para semi escolar
+     * 'I' o 'i' para independiente
      * @param modalidad la modalidad a establecer
      */
     public void setModalidad(char modalidad) {
-        if (modalidad == 'E' || modalidad == 'S'){
+        if (modalidad == 'E' || modalidad == 'S' || modalidad == 'I'){
             this.modalidad = modalidad;
-        }else if (modalidad == 'e' || modalidad == 's'){
+        }else if (modalidad == 'e' || modalidad == 's' || modalidad == 'i'){
             this.modalidad = Character.toUpperCase(modalidad);
         }
     }
@@ -243,7 +244,11 @@ public class Estudiante {
      */
     @Override
     public String toString() {
-        return "Estudiante{" + "matricula=" + matricula + ", nombre=" + nombre + ", apellidoP=" + apellidoP + ", apellidoM=" + apellidoM + ", modalidad=" + modalidad + ", turno=" + turno + ", cubiertas=" + cubiertas + ", reinscritas=" + reinscritas + ", cubiertasFinal=" + cubiertasFinal + ", semestre=" + semestre + ", activo=" + activo + '}';
+        return "" + matricula + " " + apellidoP + " " + apellidoM + " " + nombre
+                + " modalidad: " + modalidad + " turno: " + turno 
+                + " cubiertas: " + cubiertas + " reinscritas: " + reinscritas 
+                + " cubiertasFina: " + cubiertasFinal + " semestre: " + semestre
+                + " activo: " + activo;
     }
     
     

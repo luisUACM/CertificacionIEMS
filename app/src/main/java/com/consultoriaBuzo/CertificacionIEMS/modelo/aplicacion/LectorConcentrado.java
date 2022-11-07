@@ -4,12 +4,13 @@ import com.consultoriaBuzo.CertificacionIEMS.modelo.Estudiante;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Semestre;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -26,8 +27,11 @@ public class LectorConcentrado {
      */
     public LectorConcentrado(File archivo) {
         try {
-            scaner = new Scanner(archivo);
+            scaner = new Scanner(archivo, StandardCharsets.UTF_8);
         } catch (FileNotFoundException ex) {
+            System.out.println("No se encontró el archivo.");
+            Logger.getLogger(LectorConcentrado.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             System.out.println("Error al abrir el archivo.");
             Logger.getLogger(LectorConcentrado.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,36 +55,31 @@ public class LectorConcentrado {
         int cubiertas;
         int reinscritas;
         Semestre semestre;
-        Pattern patron = Pattern.compile("[^,],");
         for (i = 0; i < LINEAS_BASURA && scaner.hasNextLine(); i++){
             scaner.nextLine();
         }
-        System.out.println("Despues for");
-        //scaner.useDelimiter(",");
+        scaner.useDelimiter(",");
         
-        while(scaner.hasNext(patron)){
-            System.out.println("while");
-            scaner.next();
+        while (scaner.hasNext()){
+            saltarCampos(1);
             token = scaner.next();
-            token = token.substring(0, token.length());
+            if (token.equals("")){
+               break; 
+            }
             matricula = token;
             
-            scaner.next();
+            saltarCampos(1);
             token = scaner.next();
-            token = token.substring(0, token.length());
             apellidoP = token;
             
             token = scaner.next();
-            token = token.substring(0, token.length());
             apellidoM = token;
             
             token = scaner.next();
-            token = token.substring(0, token.length());
             nombre = token;
             
-            scaner.next();
+            saltarCampos(1);
             token = scaner.next();
-            token = token.substring(0, token.length());
             if(token.equals("")){
                 turno = ' ';
                 modalidad = 'S';
@@ -89,46 +88,33 @@ public class LectorConcentrado {
                 modalidad = 'E';
             }
             
-            scaner.next();  //Son necesarias, hay campos inútiles
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
-            scaner.next();
+            saltarCampos(20);
             token = scaner.next();
-            token = token.substring(0, token.length());
-            semestre = new Semestre(token);
+            if (token.equals("") || token.equals("---")){
+                semestre = Semestre.calcularActual();
+            }else{
+                semestre = new Semestre(token);
+            }
             
-            scaner.next();
-            scaner.next();
-            scaner.next();
+            saltarCampos(3);
             token = scaner.next();
-            token = token.substring(0, token.length());
-            reinscritas = Integer.parseInt(token);
+            if (token.equals("") || token.equals("---")){
+                reinscritas = 0;
+            }else{
+                reinscritas = Integer.parseInt(token);
+            }
             
             token = scaner.next();
-            token = token.substring(0, token.length());
-            cubiertas = Integer.parseInt(token);
+            if (token.equals("") || token.equals("---")){
+                cubiertas = 0;
+            }else{
+                cubiertas = Integer.parseInt(token);
+            }
             
             scaner.nextLine();
             
             estudiante = new Estudiante();
             estudiante.setMatricula(matricula);
-            estudiante.setMatricula(token);
             estudiante.setNombre(nombre);
             estudiante.setApellidoP(apellidoP);
             estudiante.setApellidoM(apellidoM);
@@ -140,13 +126,27 @@ public class LectorConcentrado {
             estudiante.setSemestre(semestre);
             estudiante.setActivo(true);
             lista.add(estudiante);
-            
-            if(scaner.hasNext(",,,,,,,")){
-               break; 
-            }
         }
-        
+        scaner.close();
         return lista;
     }
     
+    /**
+     * Salta n campos del concentrado de manera segura. De forma que si hay un 
+     * caracter '"' dentro del campo csv, salta todas las comas que haya hasta
+     * encontrar '"' de nuevo
+     * @param n la cantidad de campos que se quiere saltar
+     */
+    private void saltarCampos(int n){
+        int i;
+        String token;
+        for (i = 0; i < n; i++){
+            token = scaner.next();
+            if ( (!token.equals("")) && (token.charAt(0) == '"') ){
+                while ( (!token.equals("")) && (token.charAt(token.length() - 1) != '"') ){
+                    token = scaner.next();
+                }
+            }
+        }
+    }
 }

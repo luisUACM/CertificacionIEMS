@@ -1,12 +1,15 @@
-package com.consultoriaBuzo.CertificacionIEMS.persistencia;
+package com.consultoriaBuzo.CertificacionIEMS.modelo.aplicacion;
 
 import java.awt.Dialog;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.JPanel;
 
 /**
  *
@@ -23,7 +26,7 @@ public final class MensajeModal {
         ventana = new JDialog(frame);
         ventana.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         ventana.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        ventana.setSize(200, 150);
+        ventana.setLocationRelativeTo(null);
     }
     
     /**
@@ -34,14 +37,20 @@ public final class MensajeModal {
     public final void mostrarMensaje(String titulo, String mensaje){
         JButton boton = new JButton("Aceptar");
         JLabel label = new JLabel(mensaje);
-        
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.gridwidth = GridBagConstraints.REMAINDER;
+        grid.insets = new Insets(5,5,5,5);
+        panel.add(label, grid);
+        panel.add(boton, grid);
+        ventana.getContentPane().add(panel);
         ventana.setTitle(titulo);
         boton.addActionListener((ActionEvent e) -> {
             ventana.dispose();
         });
         
-        ventana.add(label);
-        //ventana.add(boton);
+        ventana.validate();
+        ventana.pack();
         ventana.setVisible(true);
     }
 }

@@ -2,6 +2,8 @@ package com.consultoriaBuzo.CertificacionIEMS.modelo;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -44,13 +46,13 @@ public class Semestre {
      * @param str la cadena a convertir
      */
     public Semestre(String str){
-        String patron = "\\d{4}\\p{Space}-\\p{Space}\\d{4} A|B";
+        String patron = "\\d{4}\\p{Space}-\\p{Space}\\d{4}\\p{Space}(A|B)";
         boolean match = Pattern.matches(patron, str);
-        if(match){
-            int a1;
-            int a2;
-            char l;
-
+        int a1;
+        int a2;
+        char l;
+        
+        if (match){
             a1 = Integer.parseInt(str.substring(0, 4));
             a2 = Integer.parseInt(str.substring(7, 11));
             l = str.substring(12, 13).charAt(0);
@@ -59,9 +61,20 @@ public class Semestre {
             fin = a2;
             letra = l;
         }else{
-            inicio = -1;
-            fin = -1;
-            letra = ' ';
+            patron ="\\d{4}-\\d{4}\\p{Space}(A|B)";
+            match = Pattern.matches(patron, str);
+            if (match){
+                a1 = Integer.parseInt(str.substring(0, 4));
+                a2 = Integer.parseInt(str.substring(5, 9));
+                l = str.substring(10, 11).charAt(0);
+                inicio = a1;
+                fin = a2;
+                letra = l;
+            }else{
+                inicio = -1;
+                fin = -1;
+                letra = ' ';
+            }
         }
     }
     /**
@@ -148,11 +161,11 @@ public class Semestre {
         agosto = LocalDateTime.of(actual.getYear(), Month.AUGUST, 1, 1, 1);
         
         if (actual.isBefore(febrero)){
-            semestre = new Semestre(actual.getYear() - 1, actual.getYear(), 'B');
+            semestre = new Semestre(actual.getYear() - 1, actual.getYear(), 'A');
         }else if (actual.isBefore(agosto)){
-            semestre = new Semestre(actual.getYear(), actual.getYear() + 1, 'A');
+            semestre = new Semestre(actual.getYear() - 1, actual.getYear(), 'B');
         }else{
-            semestre = new Semestre(actual.getYear(), actual.getYear() + 1, 'B');
+            semestre = new Semestre(actual.getYear(), actual.getYear() + 1, 'A');
         }
         return semestre;
     }
@@ -198,7 +211,7 @@ public class Semestre {
      * @return El siguiete semestre
      */
     public static Semestre calcularSiguiente(Semestre s){
-        Semestre semestre = s;
+        Semestre semestre = copy(s);
         if (semestre.getLetra() == 'A'){
             semestre.setLetra('B');
         }else{
@@ -216,7 +229,7 @@ public class Semestre {
      * @return El semestre anterior
      */
     public static Semestre calcularAnterior(Semestre s){
-        Semestre semestre = s;
+        Semestre semestre = copy(s);
         if (semestre.getLetra() == 'B'){
             semestre.setLetra('A');
         }else{
@@ -225,5 +238,58 @@ public class Semestre {
             semestre.setLetra('B');
         }
         return semestre;
+    }
+    
+    /**
+     * Calcula todos los semestres posibles tomando en cuenta el primer semestre
+     * en el que se abrió el pllantel Iztapalapa V: 2020 - 2021 A
+     * 
+     * Nota: Este método está pensado para usarse inicializando una ComboBox.
+     * Por eso regresa un array y no una lista;
+     * @return un array con la lista de los semestres ordenados del más reciente
+     * al más antiguo
+     */
+    public static Semestre[] semestresValidos(){
+        List<Semestre> lista = new ArrayList<>();
+        Semestre anterior;
+        Semestre primero = new Semestre(2020, 2021, 'A');
+        int i;
+        Semestre[] array;
+        
+        lista.add(calcularActual());
+        for (i = 1; !lista.get(i - 1).equals(primero); i++){
+            anterior = calcularAnterior(lista.get(i - 1));
+            lista.add(anterior);
+        }
+        
+        array = new Semestre[lista.size()];
+        i = 0;
+        for (Semestre s: lista){
+            array[i] = s;
+            i++;
+        }
+        
+        return array;
+    }
+    
+    /**
+     * Funcinamiento análogo a String.equals(). 
+     * Determina si el semestre pasado por parámetro es igual a this.
+     * @param semestre el semestre con el que se quiere comparar;
+     * @return true si son el mismo semestre, false si son diferentes
+     */
+    public boolean equals(Semestre semestre){
+        return (semestre.getInicio() == inicio) && (semestre.getFin() == fin) && 
+                (semestre.getLetra()== letra);
+    }
+    
+    /**
+     * Hace una copia de uun semestre en un nuevo objeto
+     * @param fuente el semestre del cual se quieren copiar los datos
+     * @return un nuevo Semestre con la misma información que la fuente
+     */
+    public static Semestre copy(Semestre fuente){
+        Semestre copia = new Semestre(fuente.inicio, fuente.fin, fuente.letra);
+        return copia;
     }
 }

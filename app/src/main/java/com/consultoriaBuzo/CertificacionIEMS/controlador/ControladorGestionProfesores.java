@@ -1,4 +1,4 @@
-package com.consultoriaBuzo.certificacionIEMS.controlador;
+package com.consultoriaBuzo.CertificacionIEMS.controlador;
 
 import com.consultoriaBuzo.CertificacionIEMS.dao.AsesorDAO;
 import com.consultoriaBuzo.CertificacionIEMS.dao.AsesorDAOImplementacion;
@@ -6,15 +6,19 @@ import com.consultoriaBuzo.CertificacionIEMS.dao.DTIDAO;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Academia;
 import com.consultoriaBuzo.CertificacionIEMS.modelo.Profesor;
 import com.consultoriaBuzo.CertificacionIEMS.dao.DTIDAOImplementacion;
-import com.consultoriaBuzo.CertificacionIEMS.persistencia.MensajeModal;
-import com.consultoriaBuzo.CertificacionIEMS.vista.VentanaGestionProfesores;
+import com.consultoriaBuzo.CertificacionIEMS.modelo.aplicacion.MensajeModal;
+import com.consultoriaBuzo.CertificacionIEMS.vista.VistaGestionProfesores;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -26,38 +30,38 @@ import javax.swing.table.TableColumn;
  *
  * @author Luis Alberto
  */
-public class ControladorGestionProfesores {
-    private final VentanaGestionProfesores vista;
+public class ControladorGestionProfesores extends Controlador{
+    private final ControladorMenuPrincipal padre;
+    private final VistaGestionProfesores vista;
     private final List<Profesor> listaProfesoresSeleccionados;
     private final List<Integer> listaFilasModificadas;
-
-    /** 
-     * Asigna la vista pasada por parámetro, si no se guardan 
-     * datos en la vista no hace diferencia con el constructor vacío
-     * @param vista JFrame del tipo VentanaGestionProfesores
-     */
-    public ControladorGestionProfesores(VentanaGestionProfesores vista) {
-        this.vista = vista;
-        listaProfesoresSeleccionados = new ArrayList<>();
-        listaFilasModificadas = new ArrayList<>();
-    }
     
     /**
      * Constructor que crea una nueva vista del tipo VentanaGestionProfesores
      * y la asigna a la variable
+     * @param ventana la ventana que mostrará la vista
+     * @param padre la ventana padre que invocó a este controlador y vista
      */
-    public ControladorGestionProfesores() {
-        vista = new VentanaGestionProfesores();
+    public ControladorGestionProfesores(JFrame ventana, ControladorMenuPrincipal padre) {
+        vista = new VistaGestionProfesores();
+        super.ventana = ventana;
+        this.padre = padre;
         listaProfesoresSeleccionados = new ArrayList<>();
         listaFilasModificadas = new ArrayList<>();
+        initVista();
     }
     
     /**
      * Inicializa la vista estableciendo los métodos que los controles 
      * ejecuten cuando haya un evento
      */
-    private void initVista(){
+    @Override
+    protected final void initVista(){
         JButton boton = vista.getBotonGuardar();
+        JTable tabla = vista.getTablaProfesores();
+        JRadioButton radioBoton = vista.getRadioBotonDTI();
+        JLabel label = vista.getLogotipo();
+        
         boton.addActionListener((ActionEvent e) -> {
             guardarCambios();
         });
@@ -67,7 +71,6 @@ public class ControladorGestionProfesores {
             registrarProfesor();
         });
         
-        JRadioButton radioBoton = vista.getRadioBotonDTI();
         radioBoton.addActionListener((ActionEvent e) -> {
             seleccionarModalidadEscolar();
         });
@@ -77,24 +80,26 @@ public class ControladorGestionProfesores {
             seleccionarModalidadSemi();
         });
         
-        JTable tabla = vista.getTablaProfesores();
-        tabla.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            seleccionarProfesor();
-        });
+        tabla.getSelectionModel().addListSelectionListener(
+                (ListSelectionEvent e) -> {seleccionarProfesor();});
                 
         vista.getComboBoxAcademia().setModel(
                 new DefaultComboBoxModel(Academia.values()));
         
-        initTabla();
+        label.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                mostrarMenuPrincipal();
+            }
+        });
         
-        vista.setVisible(true);
+        initTabla();
     }
     
     /**
      * Guarda los cambios realizados en los profesores actualizando sus registros
      */
     private void guardarCambios(){
-        System.out.println("Método para guardar");
         JTable tabla = vista.getTablaProfesores();
         Profesor profeSinModificar;
         Profesor profeModificado;
@@ -153,7 +158,7 @@ public class ControladorGestionProfesores {
                 [vista.getComboBoxAcademia().getSelectedIndex()];
         String nombre = vista.getTextoNombre().getText();
         char c = vista.getComboBoxTurno().getSelectedItem().toString().charAt(0);
-        MensajeModal mensaje = new MensajeModal(vista);
+        MensajeModal mensaje = new MensajeModal(ventana);
         
         if (nombre.compareTo("") != 0){
             prof.setNombre(nombre);
@@ -216,13 +221,6 @@ public class ControladorGestionProfesores {
         botonDTI.setSelected(false);
         cajaTurno.setEnabled(false);
         cajaTurno.setSelectedIndex(0);
-    }
-    
-    /**
-     * Muestra la ventana asociada al controlador
-     */
-    public void mostrar(){
-        initVista();
     }
     
     /**
@@ -299,11 +297,8 @@ public class ControladorGestionProfesores {
         }
     }
     
-    /**
-     * Limpia los botones de la vista, estableciendo sus campos como si fueran  
-     * inicializados por primera vez
-     */
-    private void clearVista(){
+    @Override
+    protected void clearVista(){
         JTextField textF = vista.getTextoNombre();
         JComboBox comboBox = vista.getComboBoxAcademia();
         JRadioButton rBoton = vista.getRadioBotonAsesor();
@@ -362,5 +357,21 @@ public class ControladorGestionProfesores {
             }
         }
         modelo.insertRow(i,datos);
+    }
+
+    /**
+     * Obtiene la vista asociada al controlador
+     * @return la vista del controlador
+     */
+    public VistaGestionProfesores getVista() {
+        return vista;
+    }
+    
+    /**
+     * Muestra la ventana del menú principal
+     */
+    private void mostrarMenuPrincipal(){
+        mostrar(padre.getVista());
+        clearVista();
     }
 }

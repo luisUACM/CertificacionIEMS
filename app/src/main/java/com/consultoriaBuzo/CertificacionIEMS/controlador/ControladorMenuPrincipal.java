@@ -1,46 +1,95 @@
 package com.consultoriaBuzo.CertificacionIEMS.controlador;
 
-import com.consultoriaBuzo.CertificacionIEMS.vista.VentanaMenuPrincipal;
+import com.consultoriaBuzo.CertificacionIEMS.modelo.Semestre;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
-import com.consultoriaBuzo.certificacionIEMS.controlador.ControladorGestionProfesores;
+import com.consultoriaBuzo.CertificacionIEMS.vista.VistaMenuPrincipal;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  *
  * @author Luis Alberto
  */
-public class ControladorMenuPrincipal {
+public class ControladorMenuPrincipal extends Controlador{
     
-    VentanaMenuPrincipal vista;
+    VistaMenuPrincipal vista;
+    ControladorGestionProfesores controladorGestionProfesores;
+    ControladorGestionEstudiantes controladorGestionEstudiantes;
 
-    public ControladorMenuPrincipal() {
-        vista = new VentanaMenuPrincipal();
+    /**
+     * Crea un nuevo menú principal usando la ventana pasada por parámetro para
+     * mostrar la vista.
+     * @param ventana la ventana en la cual se mostrará la vista
+     */
+    public ControladorMenuPrincipal(JFrame ventana) {
+        super.ventana = ventana;
+        vista = new VistaMenuPrincipal();
+        controladorGestionProfesores = new ControladorGestionProfesores(ventana, this);
+        controladorGestionEstudiantes = new ControladorGestionEstudiantes(ventana, this);
+        initVista();
+        mostrar(vista);
+        
     }
     
-    private void initVista(){
+    @Override
+    protected final void initVista(){
         JButton boton = vista.getBtnGestionProfesores();
+        JLabel label = vista.getImgGestionProfesores();
+        
         boton.addActionListener((ActionEvent e) -> {
             mostrarGestionProfesores();
+        });
+        label.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                mostrarGestionProfesores();
+            }
         });
         
         boton = vista.getBtnGestionEstudiantes();
         boton.addActionListener((ActionEvent e) -> {
             mostrarGestionEstudiantes();
         });
+        label = vista.getImgGestionEstudiantes();
+        label.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                mostrarGestionEstudiantes();
+            }
+        });
         
-        vista.setVisible(true);
+        label = vista.getLblSemestre();
+        label.setText(Semestre.calcularActual().toString());
+        
     }
-
-    public void mostrar(){
-        initVista();
-    }
+    
+    /**
+     * Cambia la ventana a la de gestión de profesores, en la misma ventana
+     */
     private void mostrarGestionProfesores() {
-        ControladorGestionProfesores controlador = new ControladorGestionProfesores();
-        controlador.mostrar();
+        mostrar(controladorGestionProfesores.getVista());
     }
 
+    /**
+     * Cambia la ventana a la de gestión de estudiantes, en la misma ventana
+     */
     private void mostrarGestionEstudiantes() {
-        ControladorGestionEstudiantes controlador = new ControladorGestionEstudiantes();
-        controlador.mostrar();
+        
+        mostrar(controladorGestionEstudiantes.getVista());
+    }
+    
+    /**
+     * Obtiene la vista asociada al controlador
+     * @return la vista del controlador
+     */
+    public VistaMenuPrincipal getVista() {
+        return vista;
+    }
+
+    @Override
+    protected void clearVista() {
     }
 }

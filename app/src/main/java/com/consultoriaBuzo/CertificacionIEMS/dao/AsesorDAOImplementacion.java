@@ -193,6 +193,7 @@ public class AsesorDAOImplementacion implements AsesorDAO{
         } catch (SQLException ex) {
             System.out.println("Error en la clase AsesorDAOImplementacion método "
                     + "getAsesor(Asesor).");
+            System.out.println(ex.getMessage());
         }finally{
             if (set != null){
                 try {
@@ -242,6 +243,7 @@ public class AsesorDAOImplementacion implements AsesorDAO{
         } catch (SQLException ex) {
             System.out.println("Error en la clase AsesorDAOImplementacion método "
                     + "getAsesor(Asesor).");
+            System.out.println(ex.getMessage());
         }finally{
             if (set != null){
                 try {
