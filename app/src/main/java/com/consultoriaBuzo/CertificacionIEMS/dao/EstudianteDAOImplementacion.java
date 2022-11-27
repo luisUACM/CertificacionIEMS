@@ -197,8 +197,8 @@ public class EstudianteDAOImplementacion implements EstudianteDAO {
         Connection con = null;
         PreparedStatement querry = null;
         ResultSet set = null;
-        String sql = "SELECT * FROM estudiante WHERE asig_c > 30 AND "
-                + "estado_activo = 'Y'";
+        String sql = "SELECT * FROM estudiante WHERE asig_c > 28 AND "
+                + "estado_activo = 'Y' ORDER BY matricula ASC";
         
         try{
             con = conexion.getConexionOracle();

@@ -18,6 +18,7 @@ public class ControladorMenuPrincipal extends Controlador{
     VistaMenuPrincipal vista;
     ControladorGestionProfesores controladorGestionProfesores;
     ControladorGestionEstudiantes controladorGestionEstudiantes;
+    ControladorMonitoreo controladorMonitoreo;
 
     /**
      * Crea un nuevo menú principal usando la ventana pasada por parámetro para
@@ -27,8 +28,8 @@ public class ControladorMenuPrincipal extends Controlador{
     public ControladorMenuPrincipal(JFrame ventana) {
         super.ventana = ventana;
         vista = new VistaMenuPrincipal();
-        controladorGestionProfesores = new ControladorGestionProfesores(ventana, this);
-        controladorGestionEstudiantes = new ControladorGestionEstudiantes(ventana, this);
+        
+        cargarHijos();
         initVista();
         mostrar(vista);
         
@@ -61,6 +62,18 @@ public class ControladorMenuPrincipal extends Controlador{
             }
         });
         
+        boton = vista.getBtnMonitoreo();
+        boton.addActionListener((ActionEvent e) ->{
+            mostrarMonitoreo();
+        });
+        label = vista.getImgMonitoreo();
+        label.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                mostrarMonitoreo();
+            }
+        });
+        
         label = vista.getLblSemestre();
         label.setText(Semestre.calcularActual().toString());
         
@@ -77,8 +90,12 @@ public class ControladorMenuPrincipal extends Controlador{
      * Cambia la ventana a la de gestión de estudiantes, en la misma ventana
      */
     private void mostrarGestionEstudiantes() {
-        
         mostrar(controladorGestionEstudiantes.getVista());
+    }
+    
+    private void mostrarMonitoreo(){
+        controladorMonitoreo.actualizarVista();
+        mostrar(controladorMonitoreo.getVista());
     }
     
     /**
@@ -91,5 +108,19 @@ public class ControladorMenuPrincipal extends Controlador{
 
     @Override
     protected void clearVista() {
+    }
+    
+    /**
+     * Crea los objetos controladores que se pueden invocar desde el menú 
+     * principal para que no se tarden desplegar las vistas cuando se presiona 
+     * algún botón que invoque otro controlador
+     */
+    private void cargarHijos(){
+        controladorGestionProfesores = new ControladorGestionProfesores(
+                ventana, this);
+        controladorGestionEstudiantes = new ControladorGestionEstudiantes(
+                ventana, this);
+        
+        controladorMonitoreo = new ControladorMonitoreo(ventana, this);
     }
 }

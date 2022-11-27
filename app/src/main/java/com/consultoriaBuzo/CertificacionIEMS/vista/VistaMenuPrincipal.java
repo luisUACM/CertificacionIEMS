@@ -34,6 +34,8 @@ public class VistaMenuPrincipal extends javax.swing.JPanel {
         imgGestionEstudiantes = new javax.swing.JLabel();
         imgGestionProfesores = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        btnMonitoreo = new javax.swing.JButton();
+        imgMonitoreo = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         lblSemestre = new javax.swing.JLabel();
 
@@ -85,15 +87,31 @@ public class VistaMenuPrincipal extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("Altas y bajas", jPanel1);
 
+        btnMonitoreo.setText("Monitoreo de egresos");
+
+        imgMonitoreo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Monitoreo.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(imgMonitoreo))
+                    .addComponent(btnMonitoreo))
+                .addContainerGap(486, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 333, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(imgMonitoreo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMonitoreo)
+                .addContainerGap(179, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Proceso de certificación", jPanel2);
@@ -144,8 +162,10 @@ public class VistaMenuPrincipal extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGestionEstudiantes;
     private javax.swing.JButton btnGestionProfesores;
+    private javax.swing.JButton btnMonitoreo;
     private javax.swing.JLabel imgGestionEstudiantes;
     private javax.swing.JLabel imgGestionProfesores;
+    private javax.swing.JLabel imgMonitoreo;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -202,4 +222,21 @@ public class VistaMenuPrincipal extends javax.swing.JPanel {
     public JLabel getLblSemestre() {
         return lblSemestre;
     }
+
+    /**
+     * Regresa el botón de monitoreo de posiblles egresados
+     * @return el JButton de monitoreo
+     */
+    public JButton getBtnMonitoreo() {
+        return btnMonitoreo;
+    }
+
+    /**
+     * Regresa la label con la imagen del monitoreo
+     * @return la JLabel del monitoreo
+     */
+    public JLabel getImgMonitoreo() {
+        return imgMonitoreo;
+    }
+    
 }

@@ -120,12 +120,12 @@ public class ControladorGestionEstudiantes extends Controlador{
         MensajeModal mensaje = new MensajeModal(ventana);
         boolean exito;
         
-        nombre = texto.getText();
-        if (nombre.equals("")){
-            mensaje.mostrarMensaje("ERROR", "El estudiante no tiene nombre");
+        matricula = texto.getText();
+        if (matricula.equals("")){
+            mensaje.mostrarMensaje("ERROR", "El estudiante no tiene matrícula");
             return;
         }else{
-            estudiante.setNombre(nombre);
+            estudiante.setMatricula(matricula);
         }
         
         texto = vista.getTextoApellidoP();
@@ -148,17 +148,17 @@ public class ControladorGestionEstudiantes extends Controlador{
             estudiante.setApellidoM(apellidoM);
         }
         
-        texto = vista.getTextoMatricula();
-        matricula = texto.getText();
-        if (matricula.equals("")){
-            mensaje.mostrarMensaje("ERROR", "El estudiante no tiene matrícula");
+        texto = vista.getTextoNombre();
+        nombre = texto.getText();
+        if (nombre.equals("")){
+            mensaje.mostrarMensaje("ERROR", "El estudiante no tiene nombre");
             return;
         }else{
-            estudiante.setMatricula(matricula);
+            estudiante.setNombre(nombre);
         }
         
         modalidad = caja.getSelectedItem().toString().charAt(0);
-        if(modalidad != ' '){
+        if (modalidad != ' '){
             estudiante.setModalidad(modalidad);
         }else{
             mensaje.mostrarMensaje("ERROR", "El estudiante no tiene modalidad");
@@ -167,8 +167,13 @@ public class ControladorGestionEstudiantes extends Controlador{
         
         caja = vista.getComboBoxTurno();
         turno = caja.getSelectedItem().toString().charAt(0);
-        estudiante.setTurno(turno);
-            
+        if ((turno == ' ') && (modalidad == 'E')){
+            mensaje.mostrarMensaje("ERROR", "El estudiante no tiene turno");
+            return;
+        }else{
+            estudiante.setTurno(turno);
+        }
+        
         caja = vista.getComboBoxSemestre();
         semestre = (Semestre)caja.getSelectedItem();
         estudiante.setSemestre(semestre);
@@ -183,11 +188,12 @@ public class ControladorGestionEstudiantes extends Controlador{
         estudiante.setCubiertasFinal(cubiertas);
         estudiante.setActivo(true);
         
-        if (dao.getEstudiante(estudiante.getMatricula()) != null){
+        if (dao.getEstudiante(estudiante.getMatricula()) == null){
             exito = dao.addEstudiante(estudiante);
             if (exito){
                 mensaje.mostrarMensaje("Éxito", "Se ha registrado al estudiante"
                     + " correctamente");
+                clearVista();
             }else{
                 mensaje.mostrarMensaje("ERROR", "Hubo un error al registrar al "
                         + "estudiante");
@@ -197,6 +203,7 @@ public class ControladorGestionEstudiantes extends Controlador{
             if (exito){
                 mensaje.mostrarMensaje("Éxito", "Se ha actualizado al "
                         + "estudiante correctamente");
+                clearVista();
             }else{
                 mensaje.mostrarMensaje("ERROR", "Hubo un error al actualizar "
                         + "al estudiante");
@@ -235,6 +242,7 @@ public class ControladorGestionEstudiantes extends Controlador{
         String matricula = texto.getText();
         int i;
         String semestre;
+        MensajeModal mensaje = new MensajeModal(ventana);
         
         est = dao.getEstudiante(matricula);
         if (est != null){
@@ -277,7 +285,8 @@ public class ControladorGestionEstudiantes extends Controlador{
             spiner = vista.getSpnReinscritas();
             spiner.setValue(est.getReinscritas());
         }else{
-            clearVista();
+            mensaje.mostrarMensaje("Aviso", "No se encontró ningún estudiante "
+                    + "con la matrícula " + matricula);
         }
     }
     
@@ -303,10 +312,10 @@ public class ControladorGestionEstudiantes extends Controlador{
             
             if(success){
                 i++;
-                success = false;
             }
         }
-        mensaje.mostrarMensaje("Completado", "Se han leído corectamente " + i + " estudiantes");
+        mensaje.mostrarMensaje("Completado", "Se han leído corectamente " + i +
+                " estudiantes");
     }
 
     /**
@@ -353,10 +362,10 @@ public class ControladorGestionEstudiantes extends Controlador{
         texto = vista.getTextoNombre();
         texto.setText("");
         
-        caja.setSelectedIndex(-1);
+        caja.setSelectedIndex(0);
         
         caja = vista.getComboBoxTurno();
-        caja.setSelectedIndex(-1);
+        caja.setSelectedIndex(0);
             
         caja = vista.getComboBoxSemestre();
         caja.setSelectedIndex(0);

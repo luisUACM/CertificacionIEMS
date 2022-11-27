@@ -88,7 +88,7 @@ public class VistaGestionEstudiantes extends javax.swing.JPanel {
 
         btnGuardar.setText("Guardar");
 
-        spnCubiertas.setModel(new javax.swing.SpinnerNumberModel(0, 0, 38, 1));
+        spnCubiertas.setModel(new javax.swing.SpinnerNumberModel(0, 0, 37, 1));
         spnCubiertas.setEditor(new javax.swing.JSpinner.NumberEditor(spnCubiertas, ""));
 
         spnReinscritas.setModel(new javax.swing.SpinnerNumberModel(0, 0, 11, 1));

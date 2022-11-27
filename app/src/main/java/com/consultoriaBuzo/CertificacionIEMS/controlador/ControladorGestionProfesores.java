@@ -330,9 +330,9 @@ public class ControladorGestionProfesores extends Controlador{
         
         datos = new Object[columnas];
         datos[0] = prof.getNombre();
-        datos[1]= prof.getAcademia();
-        datos[2]= prof.getTurno();
-        datos[3]= prof.getActivo();
+        datos[1] = prof.getAcademia();
+        datos[2] = prof.getTurno();
+        datos[3] = prof.getActivo();
         
         for (i = 0; i < filas; i++){
             if ((char)modelo.getValueAt(i,2) == ' '){
